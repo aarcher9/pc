@@ -3,7 +3,7 @@
 jflex subst.l
 javac Subst.java
 
-echo "Running..."
+echo "Running..."; echo
 java Subst inputFile.txt
 echo
 
