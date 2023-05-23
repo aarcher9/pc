@@ -23,5 +23,6 @@
 
 %%
 
-"name" [a-zA-Z]  { name = yytext().substring(5); }
+/* Identifica la stringa 'nameMarco', elimina le prime 4 lettere, quelle di name, e poi se trova un 'Hello' o un 'hello' ci stampa 'helloMarco' o 'HelloMarco' */
+"name" [a-zA-Z]  { name = yytext().substring(4); }
 [Hh] "ello"        { highlight(yytext()); }
