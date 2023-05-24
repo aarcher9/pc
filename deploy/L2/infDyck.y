@@ -5,9 +5,9 @@
 %token OPEN_PAREN;
 %token CLOSE_PAREN;
 %token <sval> LOWER_CASE;
-%type <sval> s;
+/* %type <sval> s;
 %type <sval> exps;
-%type <sval> parens;
+%type <sval> parens; */
 
 %start s
 
@@ -16,17 +16,11 @@
 parens  : OPEN_PAREN s CLOSE_PAREN
         | OPEN_PAREN CLOSE_PAREN
 
-exps    : parens LOWER_CASE { System.out.println("S: "+ $2); }
+exps    : parens LOWER_CASE { System.out.println("A: " + $2); }
+        /* | LOWER_CASE parens { System.out.println("B: " + $1); } */
         | parens
 
-s       : LOWER_CASE { System.out.println("txt: " + $1); }
-        // This makes acceptable line feeds between lower cases
-        /* | s LOWER_CASE
-                { 
-                        // Values are already typed, no need to obtain value with .sval, .ival,...
-                        // $$ = $1 + $2;
-                        System.out.println("txt: "+ $2); 
-                } */
+s       : LOWER_CASE { System.out.println("Text: " + $1); }
         | exps
         | s exps
 

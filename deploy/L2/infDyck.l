@@ -21,13 +21,16 @@
 
 // In this case is ok to return only the token because the token and the matched string are basically the same thing
 "("     { //  yyparser.yylval = new ParserVal("" + yytext());
+                System.out.println("op");
                 return Parser.OPEN_PAREN; }
 
 ")"     { // yyparser.yylval = new ParserVal("" + yytext());
+                System.out.println("cp");
                 return Parser.CLOSE_PAREN; }
 
 // Here token is not the same as the matched string
 [a-z]+  { yyparser.yylval = new ParserVal(yytext());
+                System.out.println("lower");
                 return Parser.LOWER_CASE; }
 
 /* More explicit way to dump any char that does not match other rules */
