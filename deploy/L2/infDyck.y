@@ -2,35 +2,47 @@
         import java.io.*;
 %}
 
-%token OPEN_PAREN;
-%token CLOSE_PAREN;
+%token <sval> ROUND_OPEN_B;
+%token <sval> ROUND_CLOSE_B;
+%token <sval> SQUARE_OPEN_B;
+%token <sval> SQUARE_CLOSE_B;
 %token <sval> LOWER_CASE;
-/* %type <sval> s;
-%type <sval> exps;
-%type <sval> parens; */
 
-%start s
+%start block
 
 %%
 
-parens  : OPEN_PAREN s CLOSE_PAREN
-        | OPEN_PAREN CLOSE_PAREN
+round_bra  
+        : ROUND_OPEN_B block ROUND_CLOSE_B
+        | ROUND_OPEN_B ROUND_CLOSE_B
 
-exps    : parens LOWER_CASE { System.out.println("A: " + $2); }
-        /* | LOWER_CASE parens { System.out.println("B: " + $1); } */
-        | parens
+square_bra  
+        : SQUARE_OPEN_B block SQUARE_CLOSE_B
+        | SQUARE_OPEN_B SQUARE_CLOSE_B
 
-s       : LOWER_CASE { System.out.println("Text: " + $1); }
-        | exps
-        | s exps
+expression
+        : round_bra
+        | round_bra LOWER_CASE { println($2); }
+        | square_bra
+        | square_bra LOWER_CASE { println($2); }
+
+block   
+        : LOWER_CASE { println($1); }
+        | expression
+        | block expression
 
 %%
+
+
 
 static Yylex lexer;
 
+void println(String s) {
+        System.out.println(s);
+}
+
 void yyerror(String s) {
-        System.out.println("err:" + s);
-        System.out.println("   :" + yylval.sval);
+        System.out.println("Error : " + s + "\n\t : " + yylval.sval);
 }
 
 int yylex() {
@@ -38,11 +50,13 @@ int yylex() {
                 return lexer.yylex();
         }
         catch (IOException e) {
-                System.err.println("IO error :" + e);
+                System.err.println("IOError :\n\t" + e);
                 return -1;
         }
 }
 
+
+// ========== //
 public static void main(String args[]) {
 
         System.out.println("[Quit with CTRL-D]");

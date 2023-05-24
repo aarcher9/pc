@@ -10,7 +10,7 @@
         /* constructor taking an additional parser object */
         public Yylex(java.io.Reader r, Parser yyparser) {
 
-                // The default constructor (not defined here?) that calls for r.readLine(); possibly an outer while cycle checks for Ctrl-D and another inner cycle calls the lexer on the current line whenever a line feed is encountered
+                // The default constructor (not defined here?) that calls for r.readLine() or something that collects input.
                 this(r);
 
                 this.yyparser = yyparser;
@@ -19,19 +19,21 @@
 
 %%
 
-// In this case is ok to return only the token because the token and the matched string are basically the same thing
-"("     { //  yyparser.yylval = new ParserVal("" + yytext());
-                System.out.println("op");
-                return Parser.OPEN_PAREN; }
+"("     { yyparser.yylval = new ParserVal("" + yytext());
+                return Parser.ROUND_OPEN_B; }
 
-")"     { // yyparser.yylval = new ParserVal("" + yytext());
-                System.out.println("cp");
-                return Parser.CLOSE_PAREN; }
+")"     { yyparser.yylval = new ParserVal("" + yytext());
+                return Parser.ROUND_CLOSE_B; }
 
-// Here token is not the same as the matched string
+"["     { yyparser.yylval = new ParserVal("" + yytext());
+                return Parser.SQUARE_OPEN_B; }
+
+"]"     { yyparser.yylval = new ParserVal("" + yytext());
+                return Parser.SQUARE_CLOSE_B; }
+
 [a-z]+  { yyparser.yylval = new ParserVal(yytext());
-                System.out.println("lower");
                 return Parser.LOWER_CASE; }
 
 /* More explicit way to dump any char that does not match other rules */
+/* This action of dumping other character is not effectless. In fact it is seen that if a throwaway char or string breaks apart a LOWER_CASE token the parser will raise syntax error if there isn't any suitable production rule to handle two LOWER_CASE tokens */
 [^[a-z]\(\)]     {}
