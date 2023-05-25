@@ -1,8 +1,8 @@
 BEGIN
 
-
+        R1 := 6;
         write true || true;
-
+        write R1;
 
         // R1 := true;
         // R2 := false;

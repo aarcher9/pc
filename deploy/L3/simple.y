@@ -45,18 +45,23 @@ ifThen
                 mark_blank(); 
         } THEN commands { $$ = $1; }
         ;
+
 command 
         : SKIP
+
         | READ IDENTIFIER { 
                 gen_code(I.READ_INT, -99); 
                 gen_code(I.STORE, $2); 
         }
+
         | WRITE exp { 
                 gen_code(I.WRITE_INT, -99); 
         }
+
         | IDENTIFIER ASSGNOP exp { 
                 gen_code(I.STORE, $1); 
         }
+
         | ifThen ELSE { 
 
                 $1 += 1000 * reserve_loc();
@@ -66,12 +71,16 @@ command
         } commands FI { 
                 back_patch((int) $1 / 1000, I.GOTO, gen_label()); 
         }
+
         | WHILE { 
                 $1 = 1000 * gen_label(); 
         } exp { 
+
                 $1 += reserve_loc();
                 mark_blank(); 
+
         } DO commands DONE { 
+
                 gen_code(I.GOTO, (int) $1 / 1000);
                 back_patch($1 % 1000, I.JMP_FALSE, gen_label()); 
         }
@@ -168,7 +177,8 @@ public static void print_code() {
 }
 
 public static void gen_code(I istr, int arg) {
-        code_op[stC]=istr;code_arg[stC]=arg;
+        code_op[stC] = istr;
+        code_arg[stC] = arg;
         stC++;
 }
 
@@ -185,7 +195,8 @@ public static int reserve_loc() {
 }
 
 public static void back_patch(int addr, I istr, int arg) {
-        code_op[addr]=istr;code_arg[addr]=arg;
+        code_op[addr] = istr;
+        code_arg[addr] = arg;
 }
 
 
