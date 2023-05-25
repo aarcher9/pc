@@ -19,20 +19,38 @@
 
 %%
 
-"("     { yyparser.yylval = new ParserVal("" + yytext());
+"("     
+        { yyparser.yylval = new ParserVal("" + yytext());
                 return Parser.ROUND_OPEN_B; }
 
-")"     { yyparser.yylval = new ParserVal("" + yytext());
+")"     
+        { yyparser.yylval = new ParserVal("" + yytext());
                 return Parser.ROUND_CLOSE_B; }
 
-"["     { yyparser.yylval = new ParserVal("" + yytext());
+"["     
+        { yyparser.yylval = new ParserVal("" + yytext());
                 return Parser.SQUARE_OPEN_B; }
 
-"]"     { yyparser.yylval = new ParserVal("" + yytext());
+"]"     
+        { yyparser.yylval = new ParserVal("" + yytext());
                 return Parser.SQUARE_CLOSE_B; }
 
-[a-z]+  { yyparser.yylval = new ParserVal(yytext());
+[a-z]+  
+        { yyparser.yylval = new ParserVal(yytext());
                 return Parser.LOWER_CASE; }
+
+[A-Z][A-Z] { yyparser.yylval = new ParserVal(yytext());
+                return Parser.UPPER_CASE; }
+
+[:]+
+        { yyparser.yylval = new ParserVal(yytext());
+                return Parser.COLON; }
+
+"826296"
+        { yyparser.yylval = new ParserVal(yytext());
+                return Parser.REG_NUMBER; }
+
+
 
 /* More explicit way to dump any char that does not match other rules */
 /* This action of dumping other character is not effectless. In fact it is seen that if a throwaway char or string breaks apart a LOWER_CASE token the parser will raise syntax error if there isn't any suitable production rule to handle two LOWER_CASE tokens */

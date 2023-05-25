@@ -1,1 +1,6 @@
-[abc[]]
+(abc())
+(::::abc)
+(:::abc)
+(ABxyz)
+(AAxyz)
+(AA826296)
