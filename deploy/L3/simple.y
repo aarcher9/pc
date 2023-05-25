@@ -62,95 +62,100 @@ exp : NUMBER { gen_code( I.LD_INT, $1 ); }
 | exp '+' exp { gen_code( I.ADD, -99 ); }
 | exp '-' exp { gen_code( I.SUB, -99 ); }
 | exp '*' exp { gen_code( I.MULT, -99 ); }
-| exp '/' exp { gen_code( I.DIV/*.ordinal()*/, -99 ); }
+| exp '/' exp { gen_code( I.DIV, -99 ); }
 | '(' exp ')'
 ;
 
 %%
 
-public enum I { HALT, STORE, JMP_FALSE, GOTO,
-DATA, LD_INT, LD_VAR,
-READ_INT, WRITE_INT,
-LT, EQ, GT, ADD, SUB, MULT, DIV };
+public enum I { 
+        HALT, STORE, JMP_FALSE, GOTO,
+        DATA, LD_INT, LD_VAR,
+        READ_INT, WRITE_INT,
+        LT, EQ, GT, ADD, SUB, MULT, DIV 
+};
 
-void yyerror(String s)
-{
- System.out.println("err:"+s);
- System.out.println("   :"+yylval.sval);
+void yyerror(String s) {
+        System.out.println("Err: " + s);
+        System.out.println("   : " + yylval.sval);
 }
 
 static Yylex lexer;
-int yylex()
-{
- try {
-  return lexer.yylex();
- }
- catch (IOException e) {
-  System.err.println("IO error :"+e);
-  return -1;
- }
+
+
+int yylex() {
+        try {
+                return lexer.yylex();
+        }
+        catch (IOException e) {
+
+                System.err.println("IO error : " + e);
+                return -1;
+        }
 }
 
-public static void main(String args[])
-{
- //System.out.println("[Quit with CTRL-D]");
- Parser par = new Parser();
- lexer = new Yylex(new InputStreamReader(System.in), par);
- par.yyparse();
- print_code();
+private static String text(I istr) {
+        String names[] = { 
+                "HALT", "STORE", "JMP_FALSE", "GOTO",
+                "DATA", "LD_INT", "LD_VAR",
+                "READ_INT", "WRITE_INT",
+                "LT", "EQ", "GT", "ADD", "SUB", "MULT", "DIV" 
+        };
+        return "" + istr.ordinal() + "/" + names[istr.ordinal()];
 }
 
-private static String text(I istr)
-{
-String names[]=
-{ "HALT", "STORE", "JMP_FALSE", "GOTO",
-"DATA", "LD_INT", "LD_VAR",
-"READ_INT", "WRITE_INT",
-"LT", "EQ", "GT", "ADD", "SUB", "MULT", "DIV" };
- return ""+istr.ordinal()+"/"+names[istr.ordinal()];
+private static I[] code_op = new I[999];
+
+private static int[] code_arg = new int[999];
+
+private static boolean[] code_mark = new boolean[999];
+
+private static int stC = 0;
+
+public static void print_code() {
+
+        I istr; int arg;
+        int i; 
+
+        for (i = 0; i < stC; ++i) {
+
+                istr = code_op[i];
+                arg = code_arg[i];
+                System.out.println("" + (i) + "-" + text(istr) + " " + arg);
+
+                if (code_mark[i]) {
+                        System.out.println();
+                }
+        }
 }
-private static I[] code_op= new I[999];
-private static int[] code_arg= new int[999];
-private static boolean[] code_mark= new boolean[999];
-private static int stC =0;
-public static void print_code()
-{
- I istr; int arg;
- int i; for (i=0;i<stC;++i)
- {
-  istr=code_op[i];arg=code_arg[i];
-  System.out.println(""+(i)+"-"+text(istr)+" "+arg);
-  if(code_mark[i])System.out.println();
- }
+
+public static void gen_code(I istr, int arg) {
+        code_op[stC]=istr;code_arg[stC]=arg;
+        stC++;
 }
-public static void gen_code(I istr, int arg)
-{
- code_op[stC]=istr;code_arg[stC]=arg;
- stC++;//System.out.println(""+(stC++)+"-"+text(istr)+" "+arg);
+
+public static void mark_blank() {
+        code_mark[stC-1]=true;
 }
-public static void mark_blank()
-{
- code_mark[stC-1]=true;
+
+public static int gen_label() {
+        return stC;
 }
-public static int gen_label()
-{
- return stC;
+
+public static int reserve_loc() {
+        return stC++;
 }
-public static int reserve_loc()
-{
- //System.out.println(""+(stC)+"-");
- return stC++;
+
+public static void back_patch(int addr, I istr, int arg) {
+        code_op[addr]=istr;code_arg[addr]=arg;
 }
-public static void back_patch(int addr, I istr, int arg)
-{
- code_op[addr]=istr;code_arg[addr]=arg;
- //System.out.println(addr+":"+text(istr)+" "+arg);
+
+
+
+public static void main(String args[]) {
+        
+        Parser par = new Parser();
+        lexer = new Yylex(new InputStreamReader(System.in), par);
+        par.yyparse();
+        print_code();
 }
-/*=========================================================================
-  symbol:   method gen_code(I,int)
-  symbol:   method gen_label()
-  symbol:   method reserve_loc()
-  symbol:   method back_patch(int,I,int)
-{ print_code ();
-fetch_execute_cycle(); }
-**************************** End Grammar File ***************************/
