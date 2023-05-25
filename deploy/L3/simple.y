@@ -11,11 +11,15 @@
 %token ASSGNOP
 %token <ival> TRUE
 %token <ival> FALSE
+%token AND_LOGIC
+%token OR_LOGIC
 
 %left '-' '+'
 %left '*' '/'
+%left AND_LOGIC OR_LOGIC
 
 %type <ival> ifThen
+%type <ival> boolexp
 
 %%
 
@@ -73,6 +77,18 @@ command
         }
         ;
 
+boolexp
+        : TRUE { gen_code( I.LD_INT, 1 ); }
+        | FALSE { gen_code( I.LD_INT, 0 ); }
+        | boolexp AND_LOGIC boolexp { gen_code( I.MULT, -99 ); }
+        | boolexp OR_LOGIC boolexp { 
+                if ($1 != $3) {
+                        gen_code( I.ADD, -99 ); 
+                } else {
+                        gen_code( I.LD_INT, 1 );
+                }                
+        }
+
 exp 
         : NUMBER { gen_code( I.LD_INT, $1 ); }
         | IDENTIFIER { gen_code( I.LD_VAR, $1 ); }
@@ -84,8 +100,7 @@ exp
         | exp '*' exp { gen_code( I.MULT, -99 ); }
         | exp '/' exp { gen_code( I.DIV, -99 ); }
         | '(' exp ')'
-        | TRUE { gen_code( I.LD_INT, 1 ); }
-        | FALSE { gen_code( I.LD_INT, 0 ); }
+        | boolexp
         ;
 
 %%

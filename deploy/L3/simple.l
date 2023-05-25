@@ -69,6 +69,11 @@ true
 false 
         { return(Parser.FALSE); }
 
+"&&" 
+        { return(Parser.AND_LOGIC); }
+"||" 
+        { return(Parser.OR_LOGIC); }
+
 {ID} 
         { 
                 yyparser.yylval = new ParserVal(Integer.parseInt(yytext().substring(1)));
