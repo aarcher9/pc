@@ -9,6 +9,8 @@
 %token SKIP THEN ELSE FI DO END DONE
 %token READ WRITE BEGIN
 %token ASSGNOP
+%token <ival> TRUE
+%token <ival> FALSE
 
 %left '-' '+'
 %left '*' '/'
@@ -82,6 +84,8 @@ exp
         | exp '*' exp { gen_code( I.MULT, -99 ); }
         | exp '/' exp { gen_code( I.DIV, -99 ); }
         | '(' exp ')'
+        | TRUE { gen_code( I.LD_INT, 1 ); }
+        | FALSE { gen_code( I.LD_INT, 0 ); }
         ;
 
 %%

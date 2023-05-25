@@ -22,8 +22,10 @@ ID = R[0-9]
         { return(Parser.ASSGNOP); }
 
 {DIGIT}+ 
-        { yyparser.yylval = new ParserVal(Integer.parseInt(yytext()));
-                return(Parser.NUMBER); }
+        { 
+                yyparser.yylval = new ParserVal(Integer.parseInt(yytext()));
+                return(Parser.NUMBER); 
+        }
 
 do 
         { return(Parser.DO); }
@@ -68,7 +70,10 @@ false
         { return(Parser.FALSE); }
 
 {ID} 
-        { yyparser.yylval = new ParserVal(Integer.parseInt(yytext().substring(1)));return(Parser.IDENTIFIER); }
+        { 
+                yyparser.yylval = new ParserVal(Integer.parseInt(yytext().substring(1)));
+                return(Parser.IDENTIFIER); 
+        }
 
 [ \r\t\n]+ 
         { }
