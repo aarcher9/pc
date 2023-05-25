@@ -4,6 +4,14 @@ BEGIN
         write true || true;
         write R1;
 
+        if 0 < 1 then
+                write 999; 
+        fi;
+
+        // else
+        //        skip;
+        // fi;
+
         // R1 := true;
         // R2 := false;
         // R3 := false;

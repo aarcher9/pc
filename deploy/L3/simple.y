@@ -20,6 +20,7 @@
 
 %type <ival> ifThen
 %type <ival> boolexp
+%type <ival> command
 
 %%
 
@@ -60,6 +61,10 @@ command
 
         | IDENTIFIER ASSGNOP exp { 
                 gen_code(I.STORE, $1); 
+        }
+
+        | ifThen FI {
+                back_patch($1 % 1000, I.JMP_FALSE, gen_label());
         }
 
         | ifThen ELSE { 
