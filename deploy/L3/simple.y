@@ -3,9 +3,9 @@
 %}
 
 %start program
-%token <ival> NUMBER /* Simple integer */
-%token <ival> IDENTIFIER /* Simple identifier */
-%token <ival> IF WHILE /* For backpatching labels */
+%token <ival> NUMBER
+%token <ival> IDENTIFIER
+%token <ival> IF WHILE
 %token SKIP THEN ELSE FI DO END DONE
 %token READ WRITE BEGIN
 %token ASSGNOP
@@ -18,10 +18,13 @@
 %%
 
 program 
-        : BEGIN { gen_code( I.DATA, 10 ); mark_blank(); } commands
+        : BEGIN { 
+                gen_code(I.DATA, 10); 
+                mark_blank(); 
+        } commands
  
 END     { 
-                gen_code( I.HALT, -99 );
+                gen_code(I.HALT, -99);
                 mark_blank();
         }
         ;
@@ -38,7 +41,7 @@ ifThen
         ;
 command 
         : SKIP
-        | READ  IDENTIFIER { 
+        | READ IDENTIFIER { 
                 gen_code(I.READ_INT, -99); 
                 gen_code(I.STORE, $2); 
         }
@@ -82,6 +85,7 @@ exp
         ;
 
 %%
+
 
 public enum I { 
         HALT, STORE, JMP_FALSE, GOTO,

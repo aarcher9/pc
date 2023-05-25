@@ -61,6 +61,12 @@ while
 write 
         { return(Parser.WRITE); }
 
+true 
+        { return(Parser.TRUE); }
+
+false 
+        { return(Parser.FALSE); }
+
 {ID} 
         { yyparser.yylval = new ParserVal(Integer.parseInt(yytext().substring(1)));return(Parser.IDENTIFIER); }
 
