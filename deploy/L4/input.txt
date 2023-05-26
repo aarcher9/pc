@@ -1,9 +1,11 @@
 global: {
-        num thread: c
-        config: c376767676767...i9
+        num thread: 4
+        config: /etc/conf.ini
 };
 
 host: {
-        ip: someip
-        name: pluto
+        ip: 10.0.0.1
+        name: Pluto
 };
+
+empty: { };

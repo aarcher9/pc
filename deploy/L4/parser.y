@@ -10,33 +10,46 @@
 %token <sval> OPEN_CURLY_BRA
 %token <sval> CLOSE_CURLY_BRA
 
+%type <sval> s
 %type <sval> group
+%type <sval> groups
+%type <sval> members
+%type <sval> property
+%type <sval> value
 
 %start s
 
 %%
 
 s
-        : // matches empty file
-        | groups
+        : { $$ = ""; } // matches empty file
+        | groups { println($$); }
 
 groups
-        : group
-        | groups groups
+        : group { $$ = $1 + "\n"; }
+        | groups groups { $$ = $1 + $2; }
 
 group
-        : PLAIN_WORD COLON OPEN_CURLY_BRA members CLOSE_CURLY_BRA SEMI_COLON
+        : PLAIN_WORD COLON OPEN_CURLY_BRA members CLOSE_CURLY_BRA SEMI_COLON {
+                $$ = "[" + $1 + "]\n" + $4;
+        }
+        | PLAIN_WORD COLON OPEN_CURLY_BRA CLOSE_CURLY_BRA SEMI_COLON {
+                $$ = "[" + $1 + "]\n";
+        }
 
 members
         : property
-        | members members
+        | members members { $$ = $1 + $2; }
         | groups
 
 property
-        : PLAIN_WORD COLON value
-        | SPACED_WORD COLON value
+        : PLAIN_WORD COLON value {
+                $$ = $1 + "=" + $3 + "\n";
+        }
+        | SPACED_WORD COLON value {
+                $$ = $1 + "=" + $3 + "\n";
+        }
 
-// incorporating (1) and (2) here will not work
 value
         : PLAIN_WORD
         | SPECIAL_WORD

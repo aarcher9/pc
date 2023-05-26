@@ -17,21 +17,25 @@
 
 ":"
         {
+                yyparser.yylval = new ParserVal(yytext());
                 return Parser.COLON; 
         }
 
 ";"
         {
+                yyparser.yylval = new ParserVal(yytext());
                 return Parser.SEMI_COLON; 
         }
 
 "{"
         {
+                yyparser.yylval = new ParserVal(yytext());
                 return Parser.OPEN_CURLY_BRA; 
         }
 
 "}"
         {
+                yyparser.yylval = new ParserVal(yytext());
                 return Parser.CLOSE_CURLY_BRA; 
         }
 
@@ -47,7 +51,7 @@
                 return Parser.SPACED_WORD; 
         }
 
-[a-zA-Z0-9\.]+
+[a-zA-Z0-9\.\/]+
         { 
                 yyparser.yylval = new ParserVal(yytext());
                 return Parser.SPECIAL_WORD; 
