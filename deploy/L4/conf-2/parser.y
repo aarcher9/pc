@@ -2,11 +2,11 @@
         import java.io.*;
 %}
 
-%token <sval> PLAIN_WORD
-%token <sval> SPACED_WORD
-%token <sval> SPECIAL_WORD
+%token <sval> WORD
+%token <sval> DIGITS
+%token <sval> MIXED
 %token <sval> COLON
-%token <sval> SEMI_COLON
+%token <sval> COMMA
 %token <sval> OPEN_CURLY_BRA
 %token <sval> CLOSE_CURLY_BRA
 
@@ -15,7 +15,6 @@
 %type <sval> groups
 %type <sval> members
 %type <sval> property
-%type <sval> value
 
 %start s
 
@@ -30,30 +29,35 @@ groups
         | groups groups { $$ = $1 + $2; }
 
 group
-        : PLAIN_WORD COLON OPEN_CURLY_BRA members CLOSE_CURLY_BRA SEMI_COLON {
+        : WORD COLON OPEN_CURLY_BRA members CLOSE_CURLY_BRA {
                 $$ = "[" + $1 + "]\n" + $4;
         }
-        | PLAIN_WORD COLON OPEN_CURLY_BRA CLOSE_CURLY_BRA SEMI_COLON {
+        | WORD COLON OPEN_CURLY_BRA CLOSE_CURLY_BRA {
                 $$ = "[" + $1 + "]\n";
         }
 
 members
         : property
-        | members members { $$ = $1 + $2; }
-        | groups
+        // ensures that if there is no COMMA in a property line, that line should be the last on the only on (like in JSON)
+        | members COMMA members { $$ = $1 + $3; }
+        | members COMMA members COMMA { $$ = $1 + $3; }
 
 property
-        : PLAIN_WORD COLON value {
-                $$ = $1 + "=" + $3 + "\n";
-        }
-        | SPACED_WORD COLON value {
-                $$ = $1 + "=" + $3 + "\n";
-        }
+        : MIXED COLON MIXED {
 
-value
-        : PLAIN_WORD
-        | SPECIAL_WORD
+                if ($3.equals("PROPRIO NOME E COGNOME")) {
+                        $3 = "Lorenzo";
+                }
+                $$ = $1 + " = " + $3 + "\n";
+        }
+        | MIXED COLON DIGITS {
 
+                if ($3.equals("0")) {
+                        $3 = "826296";
+                }
+
+                $$ = $1 + " = " + $3 + "\n";
+        }
 %%
 
 
@@ -93,7 +97,8 @@ public static void main(String args[]) {
                 System.exit(0);
 
         } catch (IOException e) {
-
+                
+                e.printStackTrace();
                 System.exit(0);
         }
 }

@@ -1,0 +1,8 @@
+Studente: {
+        "nome" : "PROPRIO NOME E COGNOME",
+        "matricola" : 0
+}
+
+Empty: {
+
+}
