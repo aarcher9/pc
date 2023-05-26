@@ -1,6 +1,6 @@
 global: {
-        numthread: c
-        config: ci9
+        num thread: c
+        config: c376767676767...i9
 };
 
 host: {

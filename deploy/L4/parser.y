@@ -3,7 +3,8 @@
 %}
 
 %token <sval> PLAIN_WORD
-%token <sval> ALLOWED_SPECIAL
+%token <sval> SPACED_WORD
+%token <sval> SPECIAL_WORD
 %token <sval> COLON
 %token <sval> SEMI_COLON
 %token <sval> OPEN_CURLY_BRA
@@ -32,17 +33,13 @@ members
         | groups
 
 property
-        : PLAIN_WORD COLON PLAIN_WORD // (1)
-        | PLAIN_WORD COLON ALLOWED_SPECIAL // (2)
-        | PLAIN_WORD COLON value
+        : PLAIN_WORD COLON value
+        | SPACED_WORD COLON value
 
 // incorporating (1) and (2) here will not work
 value
-        : value ALLOWED_SPECIAL
-        | value PLAIN_WORD
-        /* | ALLOWED_SPECIAL
-        | PLAIN_WORD */
-
+        : PLAIN_WORD
+        | SPECIAL_WORD
 
 %%
 
@@ -74,7 +71,7 @@ int yylex() {
 
 public static void main(String args[]) {
 
-        System.out.println("[Quit with CTRL-D]");
+        System.out.println("Parsing...\n");
         Parser par = new Parser();
 
         try {

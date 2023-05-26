@@ -15,11 +15,6 @@
 
 %%
 
-["\t""\n"" "]
-        { 
-                // ignore SPACE, TABS, and LINE_FEED
-        }
-
 ":"
         {
                 return Parser.COLON; 
@@ -46,11 +41,19 @@
                 return Parser.PLAIN_WORD; 
         }
 
-// collection of allowed characters
-[0-9]+
+([a-z]+ " "*)+
         { 
-                /* System.out.println("dot found"); */
-
                 yyparser.yylval = new ParserVal(yytext());
-                return Parser.ALLOWED_SPECIAL; 
+                return Parser.SPACED_WORD; 
+        }
+
+[a-zA-Z0-9\.]+
+        { 
+                yyparser.yylval = new ParserVal(yytext());
+                return Parser.SPECIAL_WORD; 
+        }
+
+["\t""\n"" "]
+        { 
+                // BLANK CHARACTERS are here also allowed (to prevent input mismatch) but ignored entirely delivering the parser to check some syntax rules breaking
         }
