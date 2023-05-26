@@ -1,0 +1,9 @@
+global: {
+        numthread: c
+        config: ci9
+};
+
+host: {
+        ip: someip
+        name: pluto
+};
