@@ -83,7 +83,6 @@ int yylex() {
 
 public static void main(String args[]) {
 
-        System.out.println("Parsing...\n");
         Parser par = new Parser();
 
         try {

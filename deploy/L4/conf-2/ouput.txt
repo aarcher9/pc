@@ -1,0 +1,7 @@
+[Studente]
+nome = Lorenzo
+matricola = 826296
+
+[Empty]
+
+
