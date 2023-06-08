@@ -13,6 +13,7 @@
 %token <ival> FALSE
 %token AND_LOGIC
 %token OR_LOGIC
+%token DUAL
 
 %left '-' '+'
 %left '*' '/'
@@ -62,6 +63,11 @@ command
         | IDENTIFIER ASSGNOP exp { 
                 gen_code(I.STORE, $1); 
         }
+        
+        | IDENTIFIER IDENTIFIER DUAL exp { 
+                // gen_code(I.STORE, $1); 
+                // gen_code(I.STORE, $1);
+        }
 
         | ifThen FI {
                 back_patch($1 % 1000, I.JMP_FALSE, gen_label());
@@ -95,13 +101,7 @@ boolexp
         : TRUE { gen_code( I.LD_INT, 1 ); }
         | FALSE { gen_code( I.LD_INT, 0 ); }
         | boolexp AND_LOGIC boolexp { gen_code( I.MULT, -99 ); }
-        | boolexp OR_LOGIC boolexp { 
-                if ($1 != $3) {
-                        gen_code( I.ADD, -99 ); 
-                } else {
-                        gen_code( I.LD_INT, 1 );
-                }                
-        }
+        | exp AND_LOGIC exp { gen_code( I.MULT, -99 ); }
 
 exp 
         : NUMBER { gen_code( I.LD_INT, $1 ); }

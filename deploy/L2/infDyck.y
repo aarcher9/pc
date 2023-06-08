@@ -66,7 +66,7 @@ void colonFreeTextValidate(String s1, String s2) {
         if (s1.length() % 2 == 0) {
                 println(s2);
         } else {
-                println(s1 + s2);
+                println(':' + s2);
         }
 }
 

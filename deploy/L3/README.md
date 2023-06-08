@@ -1,0 +1,2 @@
+# Informazioni
+Il file eseguibile bash run.sh esegue tutta la catena necessaria per compilare il parser ed elaborare l'input. La cartella contiene già il file eseguibile stack-machine (compilato per GNU Linux (Arch Linux) su macchina x86_64), si lasciano allegati i sorgente in caso di bisogno. Per modificare il file che run.sh andrà ad eseguire basta modificare la riga che contiene il percorso del file simple.

@@ -74,6 +74,9 @@ false
 "||" 
         { return(Parser.OR_LOGIC); }
 
+"DUAL"
+        { return(Parser.DUAL); }
+
 {ID} 
         { 
                 yyparser.yylval = new ParserVal(Integer.parseInt(yytext().substring(1)));
